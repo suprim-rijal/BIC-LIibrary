@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Infinite Horizontal Scroll</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    .scroll-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #f9f9f9;
+      padding: 2rem 0;
+    }
+
+    .scroll-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 60px;
+      z-index: 10;
+    }
+
+    .left-zone {
+      left: 0;
+    }
+
+    .right-zone {
+      right: 0;
+    }
+
+    .scroll-container {
+      display: flex;
+      gap: 1rem;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .scroller-track {
+      display: flex;
+      animation: none;
+    }
+
+    .color-box {
+      width: 200px;
+      height: 150px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-right: 1rem;
+    }
+
+    .box1 { background-color: #ff4d4d; }
+    .box2 { background-color: #ff944d; }
+    .box3 { background-color: #ffd11a; color: #333; }
+    .box4 { background-color: #b3ff66; color: #333; }
+    .box5 { background-color: #66ffcc; color: #333; }
+    .box6 { background-color: #4dd2ff; }
+    .box7 { background-color: #a366ff; }
+    .box8 { background-color: #ff66cc; }
+    .box9 { background-color: #999999; }
+    .box10 { background-color: #00cc99; }
+  </style>
+</head>
+<body>
+
+<div class="scroll-wrapper">
+  <div class="scroll-zone left-zone"></div>
+  <div class="scroll-zone right-zone"></div>
+
+  <div class="scroll-container" id="scrollContainer">
+    <div class="scroller-track" id="scrollerTrack">
+      <!-- Boxes (20 = 10 original + 10 clone for seamless looping) -->
+      <!-- Will be duplicated via JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+  const scrollerTrack = document.getElementById('scrollerTrack');
+  const leftZone = document.querySelector('.left-zone');
+  const rightZone = document.querySelector('.right-zone');
+
+  // Create 10 boxes
+  const boxCount = 10;
+  const boxes = [];
+  for (let i = 1; i <= boxCount; i++) {
+    const box = document.createElement('div');
+    box.className = `color-box box${i}`;
+    box.textContent = `Box ${i}`;
+    boxes.push(box);
+  }
+
+  // Append original + clone boxes
+  boxes.forEach(box => scrollerTrack.appendChild(box.cloneNode(true)));
+  boxes.forEach(box => scrollerTrack.appendChild(box.cloneNode(true)));
+
+  let scrollAmount = 0;
+  let speed = 5;
+  let direction = 0; // 0 = stop, -1 = left, 1 = right
+
+  function scrollLoop() {
+    if (direction !== 0) {
+      scrollAmount += speed * direction;
+      scrollerTrack.style.transform = `translateX(${-scrollAmount}px)`;
+
+      const singleLoopWidth = scrollerTrack.scrollWidth / 2;
+
+      if (scrollAmount >= singleLoopWidth) {
+        scrollAmount = 0; // Loop forward
+      } else if (scrollAmount <= 0) {
+        scrollAmount = singleLoopWidth; // Loop backward
+      }
+    }
+    requestAnimationFrame(scrollLoop);
+  }
+
+  leftZone.addEventListener('mouseenter', () => { direction = -1; });
+  rightZone.addEventListener('mouseenter', () => { direction = 1; });
+  leftZone.addEventListener('mouseleave', () => { direction = 0; });
+  rightZone.addEventListener('mouseleave', () => { direction = 0; });
+
+  scrollLoop(); // start animation loop
+</script>
+
+</body>
+</html>

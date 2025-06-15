@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Testimonials Infinite Scroll</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    .testimonials-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      padding: 2rem 0;
+    }
+
+    .scroll-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      cursor: pointer;
+    }
+
+    .testimonials-wrapper:hover .scroll-zone {
+      opacity: 0.7;
+    }
+
+    .left-zone {
+      left: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.1), transparent);
+    }
+
+    .right-zone {
+      right: 0;
+      background: linear-gradient(-90deg, rgba(0,0,0,0.1), transparent);
+    }
+
+    .scroll-container {
+      display: flex;
+      gap: 2rem;
+      overflow: hidden;
+    }
+
+    .scroller-track {
+      display: flex;
+      gap: 2rem;
+      padding: 0 2rem;
+    }
+
+    .testimonial-card {
+      width: 300px;
+      min-width: 300px;
+      padding: 1.5rem;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .testimonial-content {
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial-author {
+      font-weight: bold;
+    }
+
+    .testimonial-role {
+      font-size: 0.8rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<div class="testimonials-wrapper">
+  <div class="scroll-zone left-zone">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 18l-6-6 6-6"/>
+    </svg>
+  </div>
+  <div class="scroll-zone right-zone">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 18l6-6-6-6"/>
+    </svg>
+  </div>
+
+  <div class="scroll-container" id="scrollContainer">
+    <div class="scroller-track" id="scrollerTrack">
+      <!-- Testimonial cards will be inserted here by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<script>
+  const scrollerTrack = document.getElementById('scrollerTrack');
+  const leftZone = document.querySelector('.left-zone');
+  const rightZone = document.querySelector('.right-zone');
+
+  // Sample testimonial data - replace with your actual testimonials
+  const testimonials = [
+    {
+      content: "This product completely transformed my workflow. I can't imagine working without it now!",
+      author: "Sarah Johnson",
+      role: "Marketing Director"
+    },
+    {
+      content: "Excellent customer service and the product is even better than I expected. Highly recommend!",
+      author: "Michael Chen",
+      role: "CTO, TechStart"
+    },
+    {
+      content: "We've seen a 40% increase in productivity since implementing this solution.",
+      author: "David Wilson",
+      role: "Operations Manager"
+    },
+    {
+      content: "Simple to use yet powerful enough for our complex needs. Perfect balance.",
+      author: "Emily Rodriguez",
+      role: "Product Designer"
+    },
+    {
+      content: "The best investment we've made this year. Worth every penny.",
+      author: "Robert Kim",
+      role: "Founder & CEO"
+    }
+  ];
+
+  // Create testimonial cards
+  function createTestimonialCard(testimonial) {
+    const card = document.createElement('div');
+    card.className = 'testimonial-card';
+    card.innerHTML = `
+      <div class="testimonial-content">"${testimonial.content}"</div>
+      <div class="testimonial-author">${testimonial.author}</div>
+      <div class="testimonial-role">${testimonial.role}</div>
+    `;
+    return card;
+  }
+
+  // Append original + clone cards for seamless looping
+  testimonials.forEach(testimonial => {
+    scrollerTrack.appendChild(createTestimonialCard(testimonial));
+  });
+  testimonials.forEach(testimonial => {
+    scrollerTrack.appendChild(createTestimonialCard(testimonial));
+  });
+
+  let scrollAmount = 0;
+  let speed = 2;
+  let direction = 0; // 0 = stop, -1 = left, 1 = right
+  let isScrolling = false;
+
+  function scrollLoop() {
+    if (direction !== 0) {
+      isScrolling = true;
+      scrollAmount += speed * direction;
+      scrollerTrack.style.transform = `translateX(${-scrollAmount}px)`;
+
+      const singleLoopWidth = scrollerTrack.scrollWidth / 2;
+
+      if (scrollAmount >= singleLoopWidth) {
+        scrollAmount = 0; // Loop forward
+      } else if (scrollAmount <= 0) {
+        scrollAmount = singleLoopWidth; // Loop backward
+      }
+    } else if (isScrolling) {
+      // Apply smooth stop
+      scrollAmount += speed * direction;
+      if (Math.abs(speed * direction) > 0.1) {
+        speed *= 0.9; // Deceleration
+        scrollerTrack.style.transform = `translateX(${-scrollAmount}px)`;
+      } else {
+        isScrolling = false;
+        speed = 2; // Reset speed
+      }
+    }
+    requestAnimationFrame(scrollLoop);
+  }
+
+  leftZone.addEventListener('mouseenter', () => { direction = -1; });
+  rightZone.addEventListener('mouseenter', () => { direction = 1; });
+  
+  leftZone.addEventListener('mouseleave', () => { direction = 0; });
+  rightZone.addEventListener('mouseleave', () => { direction = 0; });
+
+  scrollLoop(); // start animation loop
+</script>
+
+</body>
+</html>
