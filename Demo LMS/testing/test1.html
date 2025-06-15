@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIC Library - Modules</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #ff6600;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --muted-color: #6c757d;
+            --bg-light: #f9f5eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', 'EB Garamond', serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 80px;
+            background-image: url('https://www.transparenttextures.com/patterns/paper.png');
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 51, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            color: var(--secondary-color);
+            transform: scale(1.02);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            position: relative;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            position: relative;
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--primary-color);
+            min-width: 180px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            border-radius: 0 0 5px 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-content a {
+            color: #ffffff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #002244;
+            color: var(--secondary-color);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 51, 102, 0.7);
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        /* Modules Section */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .module-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .module-icon {
+            font-size: 1.8rem;
+            margin-right: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .module-title {
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .module-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .module-description {
+            color: var(--muted-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .module-footer {
+            padding: 0 1.5rem 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 4rem 2rem 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: inline-block;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        
+        .footer-logo i {
+            margin-right: 10px;
+        }
+        
+        .footer-about p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #002244;
+            color: #ffffff;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-links h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            padding-left: 5px;
+        }
+        
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+        
+        .footer-contact i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+            width: 20px;
+            text-align: center;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #001a44;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background-color: var(--primary-color);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 2rem;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 1rem 0;
+            }
+            
+            .dropdown-content {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background-color: transparent;
+                display: none;
+            }
+            
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+            
+            .dropdown-content a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section {
+                padding: 3rem 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-book-open"></i> BIC Library
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="modules.html" class="active">Modules</a></li>
+                    <li class="dropdown">
+                        <a href="#">Login <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="Login-Pages/student-login.html">Student Login</a>
+                            <a href="Login-Pages/Admin-login.html">Admin Login</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Sign Up <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="Login-Pages/student-signup.html">Student Sign Up</a>
+                            <a href="Login-Pages/Admin-signup.html">Admin Sign Up</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Library Modules</h1>
+            <p>Discover the powerful features that enhance your academic journey</p>
+        </div>
+    </section>
+    
+    <!-- Modules Section -->
+    <section class="section">
+        <div class="section-title">
+            <h2>Our Comprehensive Modules</h2>
+            <p>Explore all the tools available to support your learning and research</p>
+        </div>
+        
+        <div class="modules-grid">
+            <!-- Book Search & Catalogue -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="module-title">Book Search & Catalogue</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Browse and find books by title, author, or category with our comprehensive search system. Access detailed information about each resource in our collection.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-primary">Explore Catalogue</a>
+                </div>
+            </div>
+            
+            <!-- Book Register & Availability -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="module-title">Book Register & Availability</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Check issued and returned books as well as real-time availability status for all library materials. View borrowing history and current loans.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-secondary">Check Availability</a>
+                </div>
+            </div>
+            
+            <!-- Fee & Due Payment -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3 class="module-title">Fee & Due Payment</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Manage overdue charges and pay fines conveniently through our secure payment system. View payment history and receipts.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-primary">Pay Fees</a>
+                </div>
+            </div>
+            
+            <!-- Alerts & Notifications -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="module-title">Alerts & Notifications</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Receive updates on due dates, new arrivals, and important library announcements. Customize your notification preferences.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-secondary">View Alerts</a>
+                </div>
+            </div>
+            
+            <!-- E-Books & Digital Library -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-tablet-alt"></i>
+                    </div>
+                    <h3 class="module-title">E-Books & Digital Library</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Access PDFs, online journals, and other digital resources from anywhere, anytime. Download materials for offline reading.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-primary">Browse E-Resources</a>
+                </div>
+            </div>
+            
+            <!-- Calendar & Reminders -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="module-title">Calendar & Reminders</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">View academic dates and manage book return alerts with our integrated calendar system. Sync with your personal calendar.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="calender.html" class="btn btn-secondary">View Calendar</a>
+                </div>
+            </div>
+            
+            <!-- Academic Resources -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="module-title">Academic Resources</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Access syllabus documents, past examination papers, and recommended readings by program. Find course-specific materials.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-primary">View Resources</a>
+                </div>
+            </div>
+            
+            <!-- Catalogue & Reservation -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <h3 class="module-title">Catalogue & Reservation</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Browse our complete collection and reserve physical books for pickup at your convenience. Manage your reservations.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-secondary">Reserve Books</a>
+                </div>
+            </div>
+            
+            <!-- Library Map & Info -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 class="module-title">Library Map & Info</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Explore our interactive floor map to locate shelves, study areas, and facilities. Find your way around the library easily.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-primary">View Map</a>
+                </div>
+            </div>
+            
+            <!-- Usage Statistics -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="module-title">Usage Statistics</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Track your personal borrowing history and view reading patterns over time. Get personalized recommendations.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-secondary">View Stats</a>
+                </div>
+            </div>
+            
+            <!-- Feedback & Suggestions -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3 class="module-title">Feedback & Suggestions</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Share your thoughts, submit feedback, or make suggestions to improve our services. We value your input.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-primary">Provide Feedback</a>
+                </div>
+            </div>
+            
+            <!-- Research Assistance -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                    <h3 class="module-title">Research Assistance</h3>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">Get help with your research projects from our expert librarians. Schedule consultations and access research guides.</p>
+                </div>
+                <div class="module-footer">
+                    <a href="#" class="btn btn-secondary">Get Help</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <a href="index.html" class="footer-logo">
+                    <i class="fas fa-book-open"></i> BIC Library
+                </a>
+                <p>Providing exceptional library management solutions. Our mission is to make knowledge accessible to everyone.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="modules.html">Modules</a></li>
+                    <li><a href="Login-Pages/student-login.html">Student Portal</a></li>
+                    <li><a href="Login-Pages/Admin-login.html">Admin Portal</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <br>
+                <p><i class="fas fa-map-marker-alt"></i>Hakim Chowk, Bharatpur-10, Chitwan</p>
+                <p><i class="fas fa-phone"></i>056-598892, 598992</p>
+                <p><i class="fas fa-envelope"></i> info@bostoncollege.edu.np</p>
+                <p><i class="fas fa-clock"></i> Sun-Fri: 8:00 AM - 5:00 PM</p>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 BIC Library. All Rights Reserved. | <a style="color: #ff6600;" href="#">Privacy Policy</a> | <a style="color: #ff6600;" href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Animate modules on scroll
+        const moduleCards = document.querySelectorAll('.module-card');
+        
+        const animateOnScroll = () => {
+            moduleCards.forEach((card, index) => {
+                const cardPosition = card.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (cardPosition < screenPosition) {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                }
+            });
+        };
+        
+        // Set initial state for animation
+        window.addEventListener('load', () => {
+            moduleCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            animateOnScroll();
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+</body>
+</html>
